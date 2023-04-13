@@ -55,6 +55,13 @@ namespace anna {
 	}
 
 	bool integerCheck(std::string data) {
+		if (data[0] == '-') {
+			if (data.length() > 1) {
+				data = data.erase(0, 1);
+			} else {
+				return false;
+			}
+		}
 		for (auto&& slot : data) {
 			if (!(slot >= '0' && slot <= '9')) {
 				return false; // Data unclean
