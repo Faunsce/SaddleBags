@@ -46,7 +46,7 @@ namespace anna {
 		if (data.length() > 0) { // Ensure input isn't empty
 			if (data.length() < 10) { // Ensure input isn't too long
 				if (data[0] == '-') { // Check for negative input
-					if (data.length() > 1 && (data[1] > '0' && data[1] < '9')) { // Ensure there is data after the sign
+					if (data.length() > 0) { // Ensure there is data after the sign
 						data.erase(0, 1);
 						dataFlags.sign = false;
 					} else {
@@ -54,22 +54,39 @@ namespace anna {
 						return dataFlags;
 					}
 				} 
-				for (auto&& pos : data) { // Scan string for decimals and numbers, fail on non decimal and numbers
-					if (pos == '.') {
-						if (dataFlags.whole == true) {
-							dataFlags.whole = false;
-							continue; // Keep num check from failing first decimal
-						} else {
-							std::cout << "Input may not have more than one decimal indicator, please try again!" << std::endl;
-							return dataFlags;
-						}
+				
+				auto decimalSlot = data.find('.'); // Locate first decimal
+				if (decimalSlot != std::string::npos) { // If decimal found, find numbers before and after 
+					if (decimalSlot > 0 && decimalSlot < data.size() - 1) { // Make sure decimal isn't at end or beginning
+						dataFlags.whole = false;
+						data.erase(decimalSlot, 1);
 					} else {
-						if (!(pos > '0' && pos < '9')) {
-							std::cout << "Only numbers, decimals, and a sign indicator are allowed, please try again!" << std::endl;
-							return dataFlags;
-						} 
+						std::cout << "Input must contain data before and after decimal sign, please try again!" << std::endl;
+						return dataFlags;
 					}
 				}
+				for (auto&& pos : data) { // Scan string for decimals and numbers, fail on non decimal and numbers
+					if (!std::isdigit(pos)) {
+						if (std::isalpha(pos)) {
+							std::cout << "Letters are not valid input, please try again!" << std::endl;
+							return dataFlags;
+						} else {
+							switch (pos)
+							{
+							case '.':
+								std::cout << "You may only use one decimal, please try again!" << std::endl;
+								return dataFlags;
+							case '-':
+								std::cout << "You may only use one sign, please try again!" << std::endl;
+								return dataFlags;
+							default:
+								std::cout << "You may only use a sign, a decimal, and numbers, please try again!" << std::endl;
+								return dataFlags;
+							}
+						}
+					}
+				}
+
 				dataFlags.clean = true;
 				return dataFlags; // Data clean
 			} else {
@@ -86,7 +103,7 @@ namespace anna {
 // Notes
 
 /*
-- Add the ability to input a float and report if the number is a float vs int and pos vs neg
 - Create print function for easy printing with optional arguments for formatting
 - Add ability for program to loop, give ability to exit without killing window.
+- Fail on just a decimal
 */
