@@ -56,60 +56,56 @@ namespace anna {
 	anna::flags inputCheck(std::string data) {
 		anna::flags dataFlags = anna::flags{ false, true, true };
 		
-		if (data.length() > 0) { // Ensure input isn't empty
-			if (data.length() < 10) { // Ensure input isn't too long
-				if (data[0] == '-') { // Check for negative input
-					if (data.length() > 0) { // Ensure there is data after the sign
-						data.erase(0, 1);
-						dataFlags.sign = false;
-					} else {
-						print("Input must contain data after sign of number", true);
-						return dataFlags;
-					}
-				} 
-				
-				auto decimalSlot = data.find('.'); // Locate first decimal
-				if (decimalSlot != std::string::npos) { // If decimal found, find numbers before and after 
-					if (decimalSlot > 0 && decimalSlot < data.size() - 1) { // Make sure decimal isn't at end or beginning
-						dataFlags.whole = false;
-						data.erase(decimalSlot, 1);
-					} else {
-						print("Input must contain data before and after decimal sign", true);
-						return dataFlags;
-					}
-				}
-				for (auto&& pos : data) { // Scan string for decimals and numbers, fail on non decimal and numbers
-					if (!std::isdigit(pos)) {
-						if (std::isalpha(pos)) {
-							print("Letters are not valid input", true);
-							return dataFlags;
-						} else {
-							switch (pos)
-							{
-							case '.':
-								print("You may only use one decimal", true);
-								return dataFlags;
-							case '-':
-								print("You may only use one sign", true);
-								return dataFlags;
-							default:
-								print("You may only use a sign, a decimal, and numbers", true);
-								return dataFlags;
-							}
-						}
-					}
-				}
-
-				dataFlags.clean = true;
-				return dataFlags; // Data clean
-			} else {
-				print("Data must be no longer than 10 characters", true);
-				return dataFlags;
-			}
-		} else {
+		if (data.empty()) { // Ensure input isn't empty
 			print("No data input", true);
 			return dataFlags;
+		} else if (data.length() > 10) { // Ensure input isn't too long
+			print("Data must be no longer than 10 characters", true);
+			return dataFlags;
+		} else if (data[0] == '-') { // Check for negative input
+			if (data.length() > 0) { // Ensure there is data after the sign
+				data.erase(0, 1);
+				dataFlags.sign = false;
+			} else {
+				print("Input must contain data after sign of number", true);
+				return dataFlags;
+			}
 		}
+
+		auto decimalSlot = data.find('.'); // Locate first decimal
+		if (decimalSlot != std::string::npos) { // If decimal found, find numbers before and after 
+			if (decimalSlot > 0 && decimalSlot < data.size() - 1) { // Make sure decimal isn't at end or beginning
+				dataFlags.whole = false;
+				data.erase(decimalSlot, 1);
+			} else {
+				print("Input must contain data before and after decimal sign", true);
+				return dataFlags;
+			}
+		}
+
+		for (auto&& pos : data) { // Scan string for decimals and numbers, fail on non decimal and numbers
+			if (std::isalpha(pos)) {
+				print("Letters are not valid input", true);
+				return dataFlags;
+			} else if (!std::isdigit(pos)) {
+				switch (pos)
+				{
+				case '.':
+					print("You may only use one decimal", true);
+					return dataFlags;
+				case '-':
+					print("You may only use one sign", true);
+					return dataFlags;
+				default:
+					print("You may only use a sign, a decimal, and numbers", true);
+					return dataFlags;
+				}
+			}
+		}
+
+
+		dataFlags.clean = true;
+		return dataFlags; // Data clean
 	}
 }
 
