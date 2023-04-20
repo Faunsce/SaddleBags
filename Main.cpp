@@ -82,7 +82,7 @@ namespace anna {
 			}
 		}
 
-		if (data.length() > 10) { // Ensure input isn't too long
+		if (data.length() > 20) { // Ensure input isn't too long
 			print("Data must be no longer than 10 digits", true);
 			return dataFlags;
 		}
