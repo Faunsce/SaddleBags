@@ -19,6 +19,7 @@ namespace anna {
 
 int main()
 {
+	start:
 	// Create place in memory to store user input
 	std::string userInput; // Store user input
 
@@ -36,6 +37,7 @@ int main()
 	// Make use of user input data
 	anna::print("Your value is : " + userInput + "\nYou had a " + ((returnedData.sign) ? "positive " : "negative ") + ((returnedData.whole) ? "integer " : "float "));
 
+	std::cin.ignore(5);
 	return 0;
 }
 
@@ -59,9 +61,6 @@ namespace anna {
 		if (data.empty()) { // Ensure input isn't empty
 			print("No data input", true);
 			return dataFlags;
-		} else if (data.length() > 10) { // Ensure input isn't too long
-			print("Data must be no longer than 10 characters", true);
-			return dataFlags;
 		} else if (data[0] == '-') { // Check for negative input
 			if (data.length() > 0) { // Ensure there is data after the sign
 				data.erase(0, 1);
@@ -81,6 +80,11 @@ namespace anna {
 				print("Input must contain data before and after decimal sign", true);
 				return dataFlags;
 			}
+		}
+
+		if (data.length() > 10) { // Ensure input isn't too long
+			print("Data must be no longer than 10 digits", true);
+			return dataFlags;
 		}
 
 		for (auto&& pos : data) { // Scan string for decimals and numbers, fail on non decimal and numbers
@@ -111,6 +115,5 @@ namespace anna {
 // Notes
 
 /*
-- Create print function for easy printing with optional arguments for formatting
 - Add ability for program to loop, give ability to exit without killing window.
 */
