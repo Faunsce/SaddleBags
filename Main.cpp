@@ -19,23 +19,31 @@ namespace anna {
 
 int main()
 {
-	start:
-	// Create place in memory to store user input
-	std::string userInput; // Store user input
+	std::string userInput; 
 
-	// Request and process user input
+	
 	anna::flags returnedData;
 	do {
-		anna::print("Please enter a number : ", false, 0);
+		do {
+			anna::print("Please enter a number : ", false, 0);
+			std::getline(std::cin, userInput);
+			std::cin.clear();
+
+			returnedData = anna::inputCheck(userInput);
+
+		} while (!returnedData.clean); // Check if data is clean, otherwise have the user re-enter their input
+
+		// Make use of user input data
+		anna::print("Your value is : " + userInput + "\nYou had a " + ((returnedData.sign) ? "positive " : "negative ") + ((returnedData.whole) ? "integer " : "float "));
+		anna::print("Enter 'R' to continue processing input.");
+
+		userInput.clear();
 		std::getline(std::cin, userInput);
-		std::cin.clear();
+		if (std::isalpha(userInput[0])) {
+			userInput[0] = std::toupper(userInput[0]);
+		}
 
-		returnedData = anna::inputCheck(userInput);
-
-	} while (!returnedData.clean); // Check if data is clean, otherwise have the user re-enter their input
-
-	// Make use of user input data
-	anna::print("Your value is : " + userInput + "\nYou had a " + ((returnedData.sign) ? "positive " : "negative ") + ((returnedData.whole) ? "integer " : "float "));
+	} while (userInput[0] == 'R');
 
 	std::cin.ignore(5);
 	return 0;
