@@ -103,7 +103,6 @@ namespace anna {
 			}
 		}
 
-
 		dataFlags.clean = true;
 		return dataFlags; // Data clean
 	}
